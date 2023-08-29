@@ -1,0 +1,27 @@
+{
+  "name": "-recipes_radar_softwer_openai_integreted",
+  "version": "1.0.0",
+  "description": "Welcome to ExploreNature, your gateway to the fascinating world of nature exploration. This guide will walk you through the key features of the platform, helping you embark on an educational journey like no other.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adityagithubraj/-recipes_radar_softwer_openAI_integreted.git"
+  },
+  "keywords": [],
+  "author": "Aditya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adityagithubraj/-recipes_radar_softwer_openAI_integreted/issues"
+  },
+  "homepage": "https://github.com/adityagithubraj/-recipes_radar_softwer_openAI_integreted#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1",
+    "nodemon": "^3.0.1"
+  }
+}
