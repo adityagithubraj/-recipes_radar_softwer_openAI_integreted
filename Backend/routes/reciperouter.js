@@ -1,8 +1,11 @@
 const express=require('express')
 const axios=require("axios")
 const RecipeRoute=express.Router()
+const {Recipes}=require("../models")
 
 // ........End-Points.................
+
+// Getting Recipe From ChatGPT API
 
 RecipeRoute.post("/get",async(req,res)=>{
     console.log("Starting")
@@ -13,16 +16,18 @@ RecipeRoute.post("/get",async(req,res)=>{
                 'https://api.openai.com/v1/completions',
                 {
                     model: "text-davinci-003",
-                    prompt: `Please generate an array of at least 3 recipes that meet the following criteria:
+                    prompt: `
+                    [Act as an API]
+                    Please share a Recipe in the below mentioned structure that meet the following criteria:
                     **
-                    Recipe Details:
-                    Should contain the following ingredients:${include}
-                    Should avoid the following ingredients:${exclude}
+                    Recipe Criteria:
+                    Should contain the following ingredients:${include.join(", ")}
+                    Should avoid the following ingredients:${exclude.join(", ")}
                     **
                     
-                    Each recipe should have the following structure:
+                    The Recipe should have the following structure:
                     
-                    json
+                    *json*
                     {
                         "image": "URL to recipe image",
                         "title": "Recipe Title",
@@ -30,9 +35,12 @@ RecipeRoute.post("/get",async(req,res)=>{
                             {"name": "ingredient name", "quantity": "quantity/amount"},
                             {"name": "ingredient name", "quantity": "quantity/amount"},
                             ...
+                        ],
+                        "instructions":[
+                            "Step1","Step2",...
                         ]
                     }
-                    While Sending the Response, Act as an API and strictly follow the structure provided above and only return a single array without any additional information, sentence, etc like an API does`,
+                    While Sending the Response, Act as an API and strictly follow the structure provided above and only return data in json format.`,
                     max_tokens: 1000,
                     temperature: 0.7,
                 },
@@ -52,6 +60,37 @@ RecipeRoute.post("/get",async(req,res)=>{
         res.status(500).json({ error: 'Error' });
     }
 })
+
+// ...........Saving The recipe fetched from ChatGPT in DB
+
+RecipeRoute.post('/save', async (req, res) => {
+    try {
+      // Get recipe data from the request body
+      const { title, ingredients, instructions, image } = req.body;
+  
+      // Create a new recipe in the database
+      const newRecipe = await Recipes.create({
+        title,
+        ingredients,
+        instructions,
+        image,
+      });
+  
+      res.status(201).json({ message: 'Recipe created successfully', recipe: newRecipe });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+
+
+
+
+
+
+
+
 
 module.exports={
     RecipeRoute
